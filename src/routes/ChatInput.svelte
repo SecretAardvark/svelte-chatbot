@@ -8,15 +8,6 @@
 	export let onSend;
 	let content = '';
 
-	// const handleSend = () => {
-	// 	if (!content) {
-	// 		alert('Please enter a message');
-	// 		return;
-	// 	}
-	// 	dispatch('send', { role: 'user', content });
-	// 	content = '';
-	// };
-
 	const handleChange = (event) => {
 		const value = event.target.value;
 		if (value.length > 4000) {
@@ -32,6 +23,7 @@
 			event.preventDefault();
 			// handleSend();
 			onSend({ role: 'user', content });
+			content= ''
 		}
 	}
 
@@ -56,7 +48,10 @@
 	/>
 
 	<button
-		on:click={onSend({ role: 'user', content })}
+		on:click={()=> {
+			onSend({ role: 'user', content });
+			content = ''
+		}}
 		class="text-sm sm:text-base text-neutral-900 font-semibold rounded-lg px-4 py-2 bg-neutral-200 hover:bg-neutral-300 focus:outline-none focus:ring-1 focus:ring-neutral-300"
 	>
 		<!-- <IconArrowUp

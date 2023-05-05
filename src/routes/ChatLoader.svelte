@@ -9,5 +9,6 @@
 	>
 		<!-- TODO: find a replacement icon for this-->
 		<!-- <IconDots class="animate-pulse" /> -->
+		<div class="animate-pulse text-xl">...</div>
 	</div>
 </div>

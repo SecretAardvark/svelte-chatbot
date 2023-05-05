@@ -16,88 +16,40 @@
 	}
 
 	async function handleSend(message: Message) {
-		let updatedMessages = [...$messages, message];
-		console.log(message);
-		$messages = updatedMessages;
-		$loading = true;
-
-		// const response = await fetch("/api/chat/v1/completions", {
-		//   method: "POST",
-		//   headers: {
-		//     "Content-Type": "application/json"
-		//   },
-		//   body: JSON.stringify({
-		//     messages: updatedMessages
-		//   })
-		// });
+		const updatedMessages = [...$messages, message];
+		messages.set(updatedMessages);
+		loading.set(true);
 
 		let response = await window.ai.getCompletion({
 			messages: $messages
-			// prompt: 'hello?'
 		});
-		if (response.status !== 200) {
-			console.error(`Error fetching response from API: ${response.status}`);
-			return;
-		}
+		console.log(response.message.content);
+		//TODO: window.ai doesn't return the usual response codes. Need to figure out how to handle this.
+		// if (response.status !== 200) {
+		// 	console.error(`Error fetching response from API: ${response.status}`);
+		// 	return;
+		// }
+		loading.set(false);
 
-		const data = response.body;
-		console.log(response.message.text);
-		if (!data) {
-			return;
-		}
-
-		$loading = false;
-
-		const reader = data.getReader();
-		const decoder = new TextDecoder();
-		let done = false;
-		let isFirst = true;
-
-		while (!done) {
-			const { value, done: doneReading } = await reader.read();
-			done = doneReading;
-			const chunkValue = decoder.decode(value);
-
-			if (isFirst) {
-				isFirst = false;
-				$messages = [
-					...$messages,
-					{
-						role: 'assistant',
-						content: chunkValue
-					}
-				];
-			} else {
-				$messages = $messages.slice(0, -1).concat({
-					...$messages[$messages.length - 1],
-					content: $messages[$messages.length - 1].content + chunkValue
-				});
-			}
-		}
+		const receivedMesage:Message = response.message;
+		messages.update((messages) => [...messages, receivedMesage]);
 	}
 
 	function handleReset() {
-		$messages = [
-			{
-				role: 'assistant',
-				content: `Hi there! I'm Chatbot UI, an AI assistant. I can help you with things like answering questions, providing information, and helping with tasks. How can I help you?`
-			}
-		];
-	}
-
-	onMount(() => {
-		scrollToBottom();
 		messages.set([
 			{
 				role: 'assistant',
 				content: `Hi there! I'm Chatbot UI, an AI assistant. I can help you with things like answering questions, providing information, and helping with tasks. How can I help you?`
 			}
 		]);
+	}
+
+	onMount(() => {
+		scrollToBottom();
+		handleReset();
 	});
 
-	afterUpdate(() => {
-		scrollToBottom();
-	});
+	afterUpdate(scrollToBottom);
 
 	onDestroy(() => {
 		messagesEndRef = null;
