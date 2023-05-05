@@ -1,18 +1,6 @@
-# create-svelte
+# Svelte-Chatbot
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
-
-## Creating a project
-
-If you're seeing this, you've probably already done this step. Congrats!
-
-```bash
-# create a new project in the current directory
-npm create svelte@latest
-
-# create a new project in my-app
-npm create svelte@latest my-app
-```
+A re-write of [chatbot-ui-lite](https://github.com/mckaywrigley/chatbot-ui-lite/blob/main/README.md) in Svelte.js. It also uses [window.ai](https://github.com/alexanderatallah/window.ai) to handle the openAI api key, which also means you can connect local models (alpaca, etc).
 
 ## Developing
 
