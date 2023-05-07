@@ -15,26 +15,56 @@
 		messagesEndRef.scrollIntoView({ behavior: 'smooth' });
 	}
 
+	//TODO: Refactor project structure.
+	//TODO: Refactor to use  https://www.npmjs.com/package/window.ai?activeTab=code
+	//TODO: Add loading indicator
+	//TODO: local models  take too long to respond and return an axios timeout error. Need to figure out how to handle this.
 	async function handleSend(message: Message) {
 		const updatedMessages = [...$messages, message];
 		messages.set(updatedMessages);
 		loading.set(true);
+		try {
+			let response = await window.ai.getCompletion({
+				messages: $messages
+			});
+			console.log(response.message.content);
+			loading.set(false);
 
-		let response = await window.ai.getCompletion({
-			messages: $messages
-		});
-		console.log(response.message.content);
-		//TODO: window.ai doesn't return the usual response codes. Need to figure out how to handle this.
-		// if (response.status !== 200) {
-		// 	console.error(`Error fetching response from API: ${response.status}`);
-		// 	return;
-		// }
-		loading.set(false);
-
-		const receivedMesage:Message = response.message;
-		messages.update((messages) => [...messages, receivedMesage]);
+			const receivedMesage: Message = response.message;
+			messages.update((messages) => [...messages, receivedMesage]);
+		} catch (error) {
+			loading.set(false);
+			handleError(error);
+		}
 	}
 
+	const handleError = (error: any) => {
+		let errorMessage = '';
+		switch (error.code) {
+			case 'NOT_AUTHENTICATED':
+				errorMessage = 'Authentication error. Please check your API key.';
+				break;
+			case 'PERMISSION_DENIED':
+				errorMessage = 'Permission denied. User did not grant permission.';
+				break;
+			case 'REQUEST_NOT_FOUND':
+				errorMessage = 'Request not found. Permission request popup timed out.';
+				break;
+			case 'INVALID_REQUEST':
+				errorMessage = 'Invalid request. The request was badly formed.';
+				break;
+			case 'MODEL_REJECTED_REQUEST':
+				errorMessage = `Model rejected request. Model API returned: ${error.message}`;
+				break;
+			default:
+				errorMessage = 'An unknown error occurred.';
+		}
+		const errorMesage: Message = {
+			role: 'assistant',
+			content: `Error: ${errorMessage}`
+		};
+		messages.update((messages) => [...messages, errorMesage]);
+	};
 	function handleReset() {
 		messages.set([
 			{
