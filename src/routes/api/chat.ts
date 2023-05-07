@@ -1,5 +1,5 @@
-import type Message  from "./types";
-import { OpenAIStream}  from "./utils"
+import type Message  from "../types";
+import { OpenAIStream}  from "../utils"
 export const config = {
   runtime: "edge"
 };

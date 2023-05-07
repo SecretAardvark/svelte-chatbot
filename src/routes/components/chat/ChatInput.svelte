@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type Message from './types';
+	import type Message from '../../types';
 	// import IconArrowUp from '@tabler/icons/ArrowUp';
 	import { onMount, createEventDispatcher } from 'svelte';
 
@@ -23,7 +23,7 @@
 			event.preventDefault();
 			// handleSend();
 			onSend({ role: 'user', content });
-			content= ''
+			content = '';
 		}
 	}
 
@@ -48,9 +48,9 @@
 	/>
 
 	<button
-		on:click={()=> {
+		on:click={() => {
 			onSend({ role: 'user', content });
-			content = ''
+			content = '';
 		}}
 		class="text-sm sm:text-base text-neutral-900 font-semibold rounded-lg px-4 py-2 bg-neutral-200 hover:bg-neutral-300 focus:outline-none focus:ring-1 focus:ring-neutral-300"
 	>

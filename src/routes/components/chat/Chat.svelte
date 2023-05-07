@@ -1,10 +1,9 @@
 <script lang="ts">
-	import type Message from './types';
+	import type Message from '../../types';
 	import ChatInput from './ChatInput.svelte';
 	import ChatLoader from './ChatLoader.svelte';
 	import ChatMessage from './ChatMessage.svelte';
 	import ResetChat from './ResetChat.svelte';
-
 	export let messages: Message[] = [];
 	export let loading = false;
 	export let onSend: (message: Message) => void;

@@ -1,20 +1,23 @@
 <script lang="ts">
 	import { onMount, onDestroy, afterUpdate } from 'svelte';
-	import Chat from './Chat.svelte';
-	import Footer from './Footer.svelte';
-	import Navbar from './Navbar.svelte';
-	import type Message from './types';
 	import { readable, writable } from 'svelte/store';
+
+	import Chat from './components/chat/Chat.svelte';
+	import Footer from './components/layout/Footer.svelte';
+	import Navbar from './components/layout/Navbar.svelte';
+	import type Message from './types';
+
 	import Input from 'postcss/lib/input';
 
 	let messages = writable<Message[]>([]);
 	let loading = writable<boolean>(false);
-	let messagesEndRef = null;
+	let darkMode = writable<boolean>(false);
+	let messagesEndRef: any = null;
 
 	function scrollToBottom() {
 		messagesEndRef.scrollIntoView({ behavior: 'smooth' });
 	}
-
+	//TODO: Darkmode? https://www.npmjs.com/package/svelte-dark-mode
 	//TODO: Refactor project structure.
 	//TODO: Refactor to use  https://www.npmjs.com/package/window.ai?activeTab=code
 	//TODO: Add loading indicator
